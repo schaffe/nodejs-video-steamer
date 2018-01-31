@@ -17,7 +17,7 @@
                 </div>
             </div>
         {{else}}
-            <p><a href="/load/{{@key}}">Season #{{@key}}</a></p>
+            <p id="elem-{{@key}}"><a href="#" onclick="load({{@key}}, event)">Season #{{@key}}</a></p>
         {{/if}}
 
     {{/each}}

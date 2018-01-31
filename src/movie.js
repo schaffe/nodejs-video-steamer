@@ -41,7 +41,7 @@ const self = (() => {
             if (!movies[sezon]) {
                 let seasonMovie = {};
                 movies[sezon] = seasonMovie;
-                return Promise.resolve(seasonMovie);
+                return Promise.resolve(movies[sezon]);
                 // return new Promise((resolve, reject) => {
                 //     request("http://simpsonsua.com.ua/sezon-" + sezon + "/", (error, response, html) => {
                 //         const $ = cheerio.load(html);

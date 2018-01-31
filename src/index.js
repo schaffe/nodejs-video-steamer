@@ -11,25 +11,19 @@ app.set('view engine', '.hbs');
 app.use(express.static('views/scripts'));
 
 
-app.get('/', (req, res) => {
-    movie.getDriveUrl("0ByhbuWRNNPUyaGhhb2RGWHA3SEk", res)
-});
+// app.get('/', (req, res) => {
+//     movie.getDriveUrl("0ByhbuWRNNPUyaGhhb2RGWHA3SEk", res)
+// });
 
 app.get('/all', (req, res) => {
     res.render("all", {seasons: movie.all()})
 });
 
-app.get('/load/:season', (req, res) => {
-    movie.crawl(req.param("season")).then((result) => res.redirect("/all"))
-    // movie.crawl(req.param("season")).then((result) => res.redirect("all"))
-
-});
-
-app.get('/:season/', (req, res) => {
+app.get('/load/:season/', (req, res) => {
     movie.crawl(req.param("season")).then((result) => res.send(result))
 });
 
-app.get('/:season/view', (req, res) => {
+app.get('/view/:season/', (req, res) => {
     res.render("movie_view", {name: "Artur"})
 });
 
