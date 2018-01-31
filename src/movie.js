@@ -4,6 +4,11 @@ const request = require('request').defaults({jar: true});
 
 const self = (() => {
     const movies = {};
+
+    for(let i = 1; i <= 28; i++) {
+        movies[i] = undefined;
+    }
+
     return {
         getMovieUrl: function (url) {
             return new Promise((resolve, reject) => {
@@ -33,27 +38,41 @@ const self = (() => {
         },
 
         crawl: (sezon = 22) => {
-            if (movies[sezon] === undefined) {
+            if (!movies[sezon]) {
                 let seasonMovie = {};
                 movies[sezon] = seasonMovie;
-                return new Promise((resolve, reject) => {
-                    request("http://simpsonsua.com.ua/sezon-" + sezon + "/", (error, response, html) => {
-                        const $ = cheerio.load(html);
-                        const promises = [];
-                        $('.movie_item figure a').map(function (i, elem) {
-                            let url = $(this).attr('href');
-                            console.log(url);
-                            promises.push(self.getMovieUrl(url)
-                                .then((url) => seasonMovie[i] = url)
-                                .then(console.log)
-                                .catch(err => console.error(err)));
-                        });
-                        return Promise.all(promises).then(() => resolve(movies[sezon])).catch(reject);
-                    })
-                }).catch(console.error);
+                return Promise.resolve(seasonMovie);
+                // return new Promise((resolve, reject) => {
+                //     request("http://simpsonsua.com.ua/sezon-" + sezon + "/", (error, response, html) => {
+                //         const $ = cheerio.load(html);
+                //         const promises = [];
+                //         $('.movie_item figure a').map(function (i, elem) {
+                //             let url = $(this).attr('href');
+                //             console.log(url);
+                //             promises.push(self.getMovieUrl(url)
+                //                 .then((url) => seasonMovie[i] = url)
+                //                 .then(console.log)
+                //                 .catch(err => console.error(err)));
+                //         });
+                //         return Promise.all(promises).then(() => resolve(movies[sezon])).catch(reject);
+                //     })
+                // }).catch(console.error);
             } else {
                 return Promise.resolve(movies[sezon]);
             }
+        },
+
+        all: () => {
+            movies[1] = {
+                1: "lol",
+                2: "lol"
+            };
+            movies[2] = {
+                1: "lol",
+                2: "lol"
+            };
+
+            return movies;
         }
     }
 })();

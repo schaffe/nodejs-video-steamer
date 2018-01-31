@@ -1,0 +1,25 @@
+<div class="panel-group">
+
+    {{#each seasons}}
+        {{#if this}}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#collapse{{@key}}">Season #{{@key}}</a>
+                    </h4>
+                </div>
+                <div id="collapse{{@key}}" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        {{#each this}}
+                            <p>{{@key}}. {{this}}</p>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+        {{else}}
+            <p><a href="/load/{{@key}}">Season #{{@key}}</a></p>
+        {{/if}}
+
+    {{/each}}
+</div>
+
