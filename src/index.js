@@ -33,7 +33,7 @@ app.listen(3000, () => console.log('Example app listening on port 3000!'));
 
 //
 // movie.crawl().then((movies) => console.log(movies));
-// crawl().then(() => console.log(movies));
+// movie.crawl(22);
 
 // getDriveUrl("0ByhbuWRNNPUyaGhhb2RGWHA3SEk");
 // getDriveUrl("https://drive.google.com/file/d/0ByhbuWRNNPUyaGhhb2RGWHA3SEk");

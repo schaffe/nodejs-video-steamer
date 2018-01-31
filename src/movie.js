@@ -37,41 +37,44 @@ const self = (() => {
             });
         },
 
-        crawl: (sezon = 22) => {
-            if (!movies[sezon]) {
+        crawl: (season) => {
+            if (!movies[season]) {
                 let seasonMovie = {};
-                movies[sezon] = seasonMovie;
-                return Promise.resolve(movies[sezon]);
-                // return new Promise((resolve, reject) => {
-                //     request("http://simpsonsua.com.ua/sezon-" + sezon + "/", (error, response, html) => {
-                //         const $ = cheerio.load(html);
-                //         const promises = [];
-                //         $('.movie_item figure a').map(function (i, elem) {
-                //             let url = $(this).attr('href');
-                //             console.log(url);
-                //             promises.push(self.getMovieUrl(url)
-                //                 .then((url) => seasonMovie[i] = url)
-                //                 .then(console.log)
-                //                 .catch(err => console.error(err)));
-                //         });
-                //         return Promise.all(promises).then(() => resolve(movies[sezon])).catch(reject);
-                //     })
-                // }).catch(console.error);
+                movies[season] = seasonMovie;
+                // return Promise.resolve(movies[season]);
+                return new Promise((resolve, reject) => {
+                    request("http://simpsonsua.com.ua/sezon-" + season + "/", (error, response, html) => {
+                        const $ = cheerio.load(html);
+                        const promises = [];
+                        $('.movie_item figure a').map(function (i, elem) {
+                            const movie = {
+                                url: $(this).attr('href'),
+                                name: $(this).find('.nazva').text(),
+                                description: $(this).find('.descr').last().text(),
+                                img: "http://simpsonsua.com.ua" + $(this).find('img').attr('src')
+                            };
+                            seasonMovie[i] = movie;
+                            console.log(movie);
+                            promises.push(Promise.resolve(seasonMovie));
+
+                            //load real urls in background
+                            // self.getMovieUrl(movie.url)
+                            //     .then((url) => movie.canonicalUrl = url)
+                            //     .then(console.log)
+                            //     .catch(err => console.error(err));
+                        });
+                        return Promise.all(promises)
+                            .then(() => resolve(movies[season]))
+                            .then(() => console.log("Loaded season " + season))
+                            .catch(reject);
+                    })
+                }).catch(console.error);
             } else {
-                return Promise.resolve(movies[sezon]);
+                return Promise.resolve(movies[season]);
             }
         },
 
         all: () => {
-            movies[1] = {
-                1: "lol",
-                2: "lol"
-            };
-            movies[2] = {
-                1: "lol",
-                2: "lol"
-            };
-
             return movies;
         }
     }
