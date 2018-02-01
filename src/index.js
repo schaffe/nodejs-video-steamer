@@ -20,16 +20,19 @@ app.get('/all', (req, res) => {
 });
 
 app.get('/load/:season/', (req, res) => {
-    movie.crawl(req.param("season")).then((result) => res.send(result))
+    movie.crawl(req.params["season"]).then((result) => res.send(result))
 });
 
-app.get('/view/:season/', (req, res) => {
-    res.render("movie_view", {name: "Artur"})
+app.get('/view/:season/:series', (req, res) => {
+    movie.getSeriesInfo(req.params["season"], req.params["series"])
+        .then(movie => res.render("movie_view", movie));
 });
 
 
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'));
+
+//movie.getSeriesInfo(1,1).then(console.log);
 
 //
 // movie.crawl().then((movies) => console.log(movies));

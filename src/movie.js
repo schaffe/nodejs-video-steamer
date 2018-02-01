@@ -5,7 +5,7 @@ const request = require('request').defaults({jar: true});
 const self = (() => {
     const movies = {};
 
-    for(let i = 1; i <= 28; i++) {
+    for (let i = 1; i <= 28; i++) {
         movies[i] = undefined;
     }
 
@@ -37,6 +37,22 @@ const self = (() => {
             });
         },
 
+        getSeriesInfo: (season, series) => {
+            return self.crawl(season)
+                .then(season => season[series])
+                .then(movie => {
+                    if (!!movie.canonicalUrl) {
+                        return movie;
+                    }
+                    return self.getMovieUrl(movie.url)
+                        .then((url) => {
+                            console.log(url);
+                            movie.canonicalUrl = url;
+                            return movie;
+                        });
+                });
+        },
+
         crawl: (season) => {
             if (!movies[season]) {
                 let seasonMovie = {};
@@ -51,6 +67,7 @@ const self = (() => {
                                 url: $(this).attr('href'),
                                 name: $(this).find('.nazva').text(),
                                 description: $(this).find('.descr').last().text(),
+                                viewUrl: "/view/" + season + "/" + i,
                                 img: "http://simpsonsua.com.ua" + $(this).find('img').attr('src')
                             };
                             seasonMovie[i] = movie;

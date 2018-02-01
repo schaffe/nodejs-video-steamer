@@ -11,12 +11,11 @@
                 <div id="collapse{{@key}}" class="panel-collapse collapse">
                     <div class="panel-body">
                         {{#each this}}
-                            <div class="item">
-                                <!--{{@key}} --->
-                                {{#with this}}
+                            {{#with this}}
+                                <a href="{{viewUrl}}" class="item">
                                     <img src="{{img}}" alt="{{name}}"/>
-                                {{/with}}
-                            </div>
+                                </a>
+                            {{/with}}
                         {{/each}}
                     </div>
                 </div>
