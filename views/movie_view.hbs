@@ -1,7 +1,10 @@
 <div class="container">
-    HI, {{name}}
-    <a href="">Prev</a>
-    <a href="">Next</a>
+    <a href="/all">Home</a>
+    {{name}}
+
+    {{#if next}}
+        <a href="{{next}}">Next</a>
+    {{/if}}
     <iframe src="{{canonicalUrl}}" width="100%" height="478" frameborder="0" allowfullscreen/>
 
 </div>

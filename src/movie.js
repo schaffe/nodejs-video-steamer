@@ -37,9 +37,13 @@ const self = (() => {
             });
         },
 
-        getSeriesInfo: (season, series) => {
-            return self.crawl(season)
-                .then(season => season[series])
+        getSeriesInfo: (seasonNum, series) => {
+            let season;
+            return self.crawl(seasonNum)
+                .then(res => {
+                    season = res;
+                    return season[series];
+                })
                 .then(movie => {
                     if (!!movie.canonicalUrl) {
                         return movie;
@@ -50,6 +54,17 @@ const self = (() => {
                             movie.canonicalUrl = url;
                             return movie;
                         });
+                }).then(movie => {
+                    if(!movie.next) {
+                        let next = parseInt(series) + 1;
+                        while (!season[next]) {
+                            if (next > 30)
+                                return movie;
+                            next++;
+                        }
+                        movie.next = "/view/" + seasonNum + "/" + next;
+                    }
+                    return movie;
                 });
         },
 
@@ -63,14 +78,15 @@ const self = (() => {
                         const $ = cheerio.load(html);
                         const promises = [];
                         $('.movie_item figure a').map(function (i, elem) {
+                            let index = i + 1;
                             const movie = {
                                 url: $(this).attr('href'),
                                 name: $(this).find('.nazva').text(),
                                 description: $(this).find('.descr').last().text(),
-                                viewUrl: "/view/" + season + "/" + i,
+                                viewUrl: "/view/" + season + "/" + index,
                                 img: "http://simpsonsua.com.ua" + $(this).find('img').attr('src')
                             };
-                            seasonMovie[i] = movie;
+                            seasonMovie[index] = movie;
                             console.log(movie);
                             promises.push(Promise.resolve(seasonMovie));
 
@@ -85,7 +101,7 @@ const self = (() => {
                             .then(() => console.log("Loaded season " + season))
                             .catch(reject);
                     })
-                }).catch(console.error);
+                });
             } else {
                 return Promise.resolve(movies[season]);
             }
