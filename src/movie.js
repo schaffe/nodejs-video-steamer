@@ -39,30 +39,31 @@ const self = (() => {
 
         getSeriesInfo: (seasonNum, series) => {
             let season;
-            return self.crawl(seasonNum)
-                .then(res => {
-                    season = res;
-                    return season[series];
-                })
+            return Promise.resolve({
+                name: "test",
+            })
+
+            // self.crawl(seasonNum)
+            //     .then(res => {
+            //         season = res;
+            //         return season[series];
+            //     })
                 .then(movie => {
-                    if (!!movie.canonicalUrl) {
-                        return movie;
-                    }
-                    return self.getMovieUrl(movie.url)
-                        .then((url) => {
-                            console.log(url);
-                            movie.canonicalUrl = url;
-                            return movie;
-                        });
+                    movie.canonicalUrl = "/video/" + seasonNum + "/" + series;
+                    return movie;
                 }).then(movie => {
                     if(!movie.next) {
                         let next = parseInt(series) + 1;
-                        while (!season[next]) {
-                            if (next > 30)
-                                return movie;
-                            next++;
-                        }
+                        // while (!season[next]) {
+                        //     if (next > 30)
+                        //         return movie;
+                        //     next++;
+                        // }
                         movie.next = "/view/" + seasonNum + "/" + next;
+                    }
+                    if(!movie.season) {
+                        movie.season = seasonNum;
+                        movie.series = series;
                     }
                     return movie;
                 });
@@ -75,6 +76,9 @@ const self = (() => {
                 // return Promise.resolve(movies[season]);
                 return new Promise((resolve, reject) => {
                     request("http://simpsonsua.com.ua/sezon-" + season + "/", (error, response, html) => {
+                        if(error)
+                            return reject(error);
+
                         const $ = cheerio.load(html);
                         const promises = [];
                         $('.movie_item figure a').map(function (i, elem) {

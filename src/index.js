@@ -2,6 +2,7 @@
 const cheerio = require("cheerio");
 const express = require('express');
 const movie = require("./movie");
+const stream = require("./stream");
 const exphbs = require('express-handlebars');
 const morgan = require('morgan');
 
@@ -34,8 +35,14 @@ app.get('/view/:season/:series', (req, res) => {
         });
 });
 
+app.get('/video/:season/:series', (req,res) => {
+    stream.process(req, res);
+});
+
 
 app.listen(3000, '0.0.0.0', () => console.log('Example app listening on port 3000!'));
+
+// stream.process();
 
 //movie.getSeriesInfo(1,1).then(console.log);
 
